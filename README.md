@@ -24,7 +24,7 @@
     "report": "",
     "interact": ""
   },
-  history_period: 10
+  "history_period": 10
 }
 ```
 
