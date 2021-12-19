@@ -1,8 +1,0 @@
-{
-    "slack_bot_token": "xoxb-167326588352-2860199162018-oazc9r7X1fEmYmJTML8qwxcx",
-    "redis": {
-        "host": "localhost",
-        "port": "6379",
-        "db": "0"
-    }
-}
