@@ -11,25 +11,26 @@ class Main:
     def __init__(self):
         self.common = Common()
         self.slack_bot = SlackBot(self.common)
-        self.channel_id = self.common.get_slack_channel_id("general")
+        self.slack_interact_channel = self.common.get_slack_channel_id("interact")
+        self.slack_report_channel = self.common.get_slack_channel_id("report")
 
     def run(self):
         try:
             self._run()
         except Exception as e:
             text = f"동작 중 에러가 발생하였습니다: {e}"
-            self.slack_bot.post_message(self.channel_id, text)
+            self.slack_bot.post_message(self.slack_report_channel, text)
 
     def _response_now_time(self, message:dict) -> None:
         now_txt = datetime.now().strftime("%Y-%m-%d %H:%M")
         text = f"현재 시각은 {now_txt}입니다."
-        self.slack_bot.post_thread_message(self.channel_id, message['ts'], text)
+        self.slack_bot.post_thread_message(self.slack_interact_channel, message['ts'], text)
         return
 
     def _response_redis_message_count(self, message:dict) -> None:
         redis_data_count = len(list(self.common.redis.scan_iter("*")))
         text = f"현재 redis에 적재된 메시지 수는 {redis_data_count:,}개 입니다."
-        self.slack_bot.post_thread_message(self.channel_id, message['ts'], text)
+        self.slack_bot.post_thread_message(self.slack_interact_channel, message['ts'], text)
 
     def _response_redis_truncate(self, message:dict) -> None:
         redis_data = list(self.common.redis.scan_iter("*"))
@@ -37,7 +38,7 @@ class Main:
         for key in redis_data:
             self.common.redis.delete(key)
         text = f"{redis_data_count}개의 데이터를 제거하였습니다"
-        self.slack_bot.post_thread_message(self.channel_id, message['ts'], text)
+        self.slack_bot.post_thread_message(self.slack_interact_channel, message['ts'], text)
 
     def execute_each_message(self, message):
         now_txt = datetime.now().strftime("%Y-%m-%d %H:%M")
