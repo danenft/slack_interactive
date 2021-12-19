@@ -55,7 +55,7 @@ class Main:
         if message['text'] == "redis 싹 비워!":
             self._response_redis_truncate(message)
 
-        self.common.to_redis(f"{message['user']}_{message['ts']}", now_txt)
+        self.common.to_redis(f"{message['user']}_{message['ts']}", message['text'])
 
     def _run(self):
         messages = self.slack_bot.get_messages(self.slack_interact_channel, self.history_period)
