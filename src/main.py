@@ -1,4 +1,5 @@
 from datetime import datetime
+import time
 
 import redis
 
@@ -12,8 +13,14 @@ class Main:
         self.slack_bot = SlackBot(self.common)
         self.channel_id = self.common.get_slack_channel_id("general")
 
-
     def run(self):
+        try:
+            self._run()
+        except Exception as e:
+            text = f"동작 중 에러가 발생하였습니다: {e}"
+            self.slack_bot.post_message(self.channel_id, text)
+
+    def _run(self):
         messages = self.slack_bot.get_messages(self.channel_id, 10)
         messages = [message for message in messages if not self.common.from_redis(f"{message['user']}_{message['ts']}")]
 
@@ -33,4 +40,6 @@ class Main:
 
 if __name__ == "__main__":
     main = Main()
-    main.run()
+    while True:
+        main.run()
+        time.sleep(1)

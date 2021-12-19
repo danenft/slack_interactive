@@ -34,10 +34,16 @@ class SlackBot:
         """
         슬랙 채널 내 메세지의 Thread에 댓글 달기
         """
-        # chat_postMessage() 메서드 호출
         result = self.client.chat_postMessage(
             channel=channel_id,
             text=text,
             thread_ts=message_ts
+        )
+        return result
+
+    def post_message(self, channel_id:str, text:str):
+        result = self.client.chat_postMessage(
+            channel=channel_id,
+            text=text
         )
         return result
