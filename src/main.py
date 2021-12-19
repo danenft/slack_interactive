@@ -57,7 +57,7 @@ class Main:
         self.common.to_redis(f"{message['user']}_{message['ts']}", now_txt)
 
     def _run(self):
-        messages = self.slack_bot.get_messages(self.channel_id, 10)
+        messages = self.slack_bot.get_messages(self.slack_interact_channel, 10)
         messages = [message for message in messages if not self.common.from_redis(f"{message['user']}_{message['ts']}")]
 
         for message in messages:
