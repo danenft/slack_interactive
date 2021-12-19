@@ -20,6 +20,8 @@ class Main:
         except Exception as e:
             text = f"동작 중 에러가 발생하였습니다: {e}"
             self.slack_bot.post_message(self.slack_report_channel, text)
+            ## 에러 났을 땐 1분간 쉬기
+            time.sleep(60)
 
     def _response_now_time(self, message:dict) -> None:
         now_txt = datetime.now().strftime("%Y-%m-%d %H:%M")
