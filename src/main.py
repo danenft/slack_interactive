@@ -13,13 +13,14 @@ class Main:
         self.slack_bot = SlackBot(self.common)
         self.slack_interact_channel = self.common.get_slack_channel_id("interact")
         self.slack_report_channel = self.common.get_slack_channel_id("report")
+        self.history_period = self.common.conf['history_period']
 
     def run(self):
         try:
             self._run()
         except Exception as e:
             text = f"동작 중 에러가 발생하였습니다: {e}"
-            self.slack_bot.post_message(self.slack_report_channel, text)
+            self.slack_bot.post_message(self.slack_report_channel, t옴xt)
             ## 에러 났을 땐 1분간 쉬기
             time.sleep(60)
 
@@ -57,7 +58,7 @@ class Main:
         self.common.to_redis(f"{message['user']}_{message['ts']}", now_txt)
 
     def _run(self):
-        messages = self.slack_bot.get_messages(self.slack_interact_channel, 10)
+        messages = self.slack_bot.get_messages(self.slack_interact_channel, self.history_period)
         messages = [message for message in messages if not self.common.from_redis(f"{message['user']}_{message['ts']}")]
 
         for message in messages:
