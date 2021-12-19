@@ -21,6 +21,7 @@ class Main:
             self.slack_bot.post_message(self.channel_id, text)
 
     def _response_now_time(self, message:dict) -> None:
+        now_txt = datetime.now().strftime("%Y-%m-%d %H:%M")
         text = f"현재 시각은 {now_txt}입니다."
         self.slack_bot.post_thread_message(self.channel_id, message['ts'], text)
         return
@@ -38,7 +39,7 @@ class Main:
         text = f"{redis_data_count}개의 데이터를 제거하였습니다"
         self.slack_bot.post_thread_message(self.channel_id, message['ts'], text)
 
-    def execute_each_message(self):
+    def execute_each_message(self, message):
         now_txt = datetime.now().strftime("%Y-%m-%d %H:%M")
 
         if message['text'] == "지금 시각은?":
